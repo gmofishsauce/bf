@@ -29,17 +29,17 @@ uint64_t nCommentsExecuted = 0;
 
 void interpret(char *instrPtr)
 {
-	while( *instrPtr ) {
-		//if(strchr("<>+-,.[]\n",*instrPtr))printf("%c",*instrPtr);
+    while( *instrPtr ) {
+        //if(strchr("<>+-,.[]\n",*instrPtr))printf("%c",*instrPtr);
         nExecuted++;
-		switch(*instrPtr++) {
-		case '<': p--;        break;
-		case '>': p++;        break;
-		case '+': data[p]++;     break;
-		case '-': data[p]--;     break;
-		case '.': putchar(data[p]); fflush(stdout); break;
-		case ',': data[p]=getchar();fflush(stdout); break;
-		case '[':
+        switch(*instrPtr++) {
+        case '<': p--;        break;
+        case '>': p++;        break;
+        case '+': data[p]++;     break;
+        case '-': data[p]--;     break;
+        case '.': putchar(data[p]); fflush(stdout); break;
+        case ',': data[p]=getchar();fflush(stdout); break;
+        case '[':
         {
             // depth is one because we just saw a "start of loop".
             // Worst case, the while loop will terminate because
@@ -48,38 +48,38 @@ void interpret(char *instrPtr)
             char depth = 1;
             char *startOfLoop = instrPtr;
             while (depth != 0 && *instrPtr) {
-				depth += *instrPtr=='[';
+                depth += *instrPtr=='[';
                 depth -= *instrPtr==']';
                 instrPtr++;
             }
-			if (depth == 0) {
-				instrPtr[-1]=0;
-				while( data[p] )
-					interpret(startOfLoop);
-				instrPtr[-1]=']';
-				break;
-			}
+            if (depth == 0) {
+                instrPtr[-1]=0;
+                while( data[p] )
+                    interpret(startOfLoop);
+                instrPtr[-1]=']';
+                break;
+            }
             // else fall through
         }
-		case ']':
+        case ']':
             printf("unbalanced bracket near %ld\n", (instrPtr - prog));
             exit(0);
-		case '#':
-			if (printStats)
-				printf("%2d %2d %2d %2d %2d %2d %2d %2d %2d %2d\n%*s\n",
+        case '#':
+            if (printStats)
+                printf("%2d %2d %2d %2d %2d %2d %2d %2d %2d %2d\n%*s\n",
                    data[0], data[1], data[2], data[3], data[4], data[5],
                    data[6], data[7], data[8], data[9], 3*p+2,"^");
-			break;
+            break;
         default:
             nCommentsExecuted++;
             break;
-		}
+        }
         // I don't really understand this: the original programmer (Mueller)
         // allocated 5000 data bytes in the array, but the program can really
         // really only use 101 of them, apparently to prevent bugs.
-		if( p<0 || p>100)
-			puts("RANGE ERROR\n"), exit(0);
-	}
+        if( p<0 || p>100)
+            puts("RANGE ERROR\n"), exit(0);
+    }
 }
 
 int main(int ac, char *av[])
@@ -88,9 +88,9 @@ int main(int ac, char *av[])
         printf("Usage: %s bfi-file [any-arg-to-show-dump-on-#]\n", av[0]);
         exit(1);
     }
-	printStats = (ac == 3);
+    printStats = (ac == 3);
 
-	FILE *fp = fopen(av[1],"r");
+    FILE *fp = fopen(av[1],"r");
     if (!fp) {
         printf("Open %s failed (\"%s\")\n", av[1], strerror(errno));
         exit(1);
